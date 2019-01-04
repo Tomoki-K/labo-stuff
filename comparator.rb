@@ -6,7 +6,7 @@ OUPUTFILE = ARGV[1] || "result.csv"
 HEADER = [:name, :hash, :is_em]
 
 reader = Reader.new(INPUTFILE)
-results = reader.read
+results = reader.read_csv
 
 new_results = [results[0]]
 original_hash = results[0][:hash]
@@ -20,4 +20,4 @@ results[1..].each do |res|
 end
 
 out = Writer.new(OUPUTFILE, HEADER)
-out.write_result(new_results)
+out.write_csv(new_results)

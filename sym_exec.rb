@@ -32,4 +32,4 @@ k_outs.each do |k_base|
 end
 
 out = Writer.new(OUPUTFILE, HEADER)
-out.write_result(results)
+out.write_csv(results)

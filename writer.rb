@@ -14,7 +14,7 @@ class Writer
     row_array
   end
 
-  def write_result(results_arr)
+  def write_csv(results_arr)
     CSV.open(@output_file, 'w') do |csv|
       csv << @header
       results_arr.each do |result|

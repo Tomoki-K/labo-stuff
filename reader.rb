@@ -5,7 +5,7 @@ class Reader
     @input_file = input_file
   end
 
-  def read
+  def read_csv
     results = []
     headers = CSV.table(@input_file).headers
     CSV.foreach(@input_file, headers: true) do |row|
