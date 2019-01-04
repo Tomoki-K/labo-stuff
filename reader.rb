@@ -18,4 +18,8 @@ class Reader
     results
   end
 
+  def read_lines
+    File.readlines(@input_file)
+  end
+
 end
