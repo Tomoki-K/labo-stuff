@@ -1,2 +1,6 @@
-*.csv
+# MacOS
 .DS_Store
+
+# project
+*.csv
+**/mutants/
