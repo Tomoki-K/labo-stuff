@@ -1,4 +1,5 @@
 require "csv"
+require "pry"
 
 class Reader
   def initialize(input_file)

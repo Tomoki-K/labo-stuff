@@ -1,6 +1,5 @@
 require "csv"
 require "fileutils"
-require "pry"
 
 class Writer
   def initialize(output_file)

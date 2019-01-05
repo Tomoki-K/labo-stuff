@@ -19,5 +19,5 @@ results[1..].each do |res|
   new_results.push(new_result_hash)
 end
 
-out = Writer.new(OUPUTFILE, HEADER)
-out.write_csv(new_results)
+out = Writer.new(OUPUTFILE)
+out.write_csv(HEADER, new_results)

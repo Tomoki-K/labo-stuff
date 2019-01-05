@@ -31,5 +31,5 @@ k_outs.each do |k_base|
   results.push(result)
 end
 
-out = Writer.new(OUPUTFILE, HEADER)
-out.write_csv(results)
+out = Writer.new(OUPUTFILE)
+out.write_csv(HEADER, results)
