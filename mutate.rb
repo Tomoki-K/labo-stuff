@@ -1,7 +1,8 @@
 require "./reader.rb"
+require 'pry'
 
 NULL_STRING = " "
-mutation_trick = {
+mutation_pattern = {
   " < ": [ " != ", " > ", " <= ", " >= ", " == " ],
   " > ": [ " != ", " < ", " <= ", " >= ", " == " ],
   "<=": [ " != ", " < ", " > ", " >= ", "==" ],
@@ -23,20 +24,14 @@ mutation_trick = {
   " !": [ " ~", NULL_STRING ],
   " && ": [ " & ", " || "," && !" ],
   " || ": [ " | ", " && ", " || !" ],
-  " >> ": " << ",
-  " << ": " >> ",
+  " >> ": [ " << " ],
+  " << ": [ " >> " ],
   " << 1": [ " << 0"," << -1", "<< 2" ],
   " >> 1": [ " >> 0", " >> -1", ">> 2" ],
-  "++": "--",
-  "--": "++",
-  " true ": " false ",
-  " false ": " true ",
-  " int ": [" short int ", " char " ],
-  " signed ": " unsigned ",
-  " unsigned ": " signed ",
-  " long ": [ " int ", " short int ", " char " ],
-  " float ": " int ",
-  " double ": " int ",
+  "++": [ "--" ],
+  "--": [ "++" ],
+  " true ": [ " false " ],
+  " false ": [ " true " ],
 }
 
 INPUTFILE = "./test/sample.c"
@@ -49,7 +44,7 @@ line_count = source_code.length
 random_line = Random.rand(0..line_count)
 
 # shuffle mutant operators
-mutant_operators = mutation_trick.keys
+mutant_operators = mutation_pattern.keys
 mutant_operators.shuffle!
 
 mutated_line = ""
@@ -63,21 +58,20 @@ source_code.each_with_index do |line, idx|
     mutatable_substring_count = line.scan(/(?=#{Regexp.quote(mo.to_s)})/).count
     next if mutatable_substring_count == 0
 
-    # choose randomly if multiple substrings are found
+    # mutate each substring if multiple are found
     mutate_at_index = 0
-    substring_index = Random.rand(1..mutatable_substring_count)
-    for r in 1..substring_index do
-      mutate_at_index = substring_index == 0 ? line.index(mo.to_s) : line.index(mo.to_s, mutate_at_index + 1)
+    for r in 1..mutatable_substring_count do
+      mutate_at_index = line.index(mo.to_s, mutate_at_index == 0 ? 0 : mutate_at_index + 1)
+
+      # create mutant for each way of mutating the substring
+      mutation_pattern[mo].each do |mutate_with|
+        mutated_line = line[0..mutate_at_index - 1] + line[mutate_at_index..].sub(mo.to_s, mutate_with)
+        # TODO: create mutant
+        puts "\n==> @Line: #{idx + 1}:#{mutate_at_index}"
+        puts "Original Line: #{line.strip}"
+        puts "Mutated Line:  #{mutated_line.strip}"
+      end
     end
-
-    # choose randomly if there are multiple ways of mutating the substring
-    mutate_with = mutation_trick[mo].is_a?(String) ? mutation_trick[mo] : mutation_trick[mo].sample
-    mutated_line = line[0..mutate_at_index - 1] + line[mutate_at_index..].sub(mo.to_s, mutate_with)
-
-    # console output
-    puts "\n==> @Line: #{idx + 1}:#{mutate_at_index}"
-    puts "Original Line: #{line.strip}"
-    puts "Mutated Line:  #{mutated_line.strip}"
   end
 end
 
