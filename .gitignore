@@ -2,5 +2,5 @@
 .DS_Store
 
 # project
-*.csv
+result.csv
 **/mutants/

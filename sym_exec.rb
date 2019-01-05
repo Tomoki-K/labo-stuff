@@ -1,11 +1,12 @@
 require "digest"
 require "./io_utils/writer"
 
-OUPUTFILE = ARGV[0] || 'result.csv'
+INPUTGLOB = ARGV[0] || './test/klee-out-*'
+OUPUTFILE = ARGV[1] || 'result.csv'
 HEADER = [:name, :hash, :is_em]
 
 results = []
-k_outs = Dir.glob('klee-out-*').sort
+k_outs = Dir.glob(INPUTGLOB).sort
 k_outs.each do |k_base|
   klee_res = []
   k_tests = Dir.glob('*.ktest', base: k_base).sort
