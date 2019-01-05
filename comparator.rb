@@ -1,5 +1,5 @@
-require "./reader.rb"
-require "./writer"
+require "./io_utils/reader"
+require "./io_utils/writer"
 
 INPUTFILE = ARGV[0] || "result.csv"
 OUPUTFILE = ARGV[1] || "result.csv"

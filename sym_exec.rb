@@ -1,5 +1,5 @@
 require "digest"
-require "./writer"
+require "./io_utils/writer"
 
 OUPUTFILE = ARGV[0] || 'result.csv'
 HEADER = [:name, :hash, :is_em]

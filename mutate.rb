@@ -1,6 +1,6 @@
-require "./mutation_patterns.rb"
-require "./reader.rb"
-require "./writer.rb"
+require "./mutation_patterns"
+require "./io_utils/reader"
+require "./io_utils/writer"
 
 INPUTFILE = "./test/sample.c"
 OUTPUTDIR = "./test/mutants"
@@ -28,7 +28,7 @@ def main
         mutations.each do |mutation|
           mutated_line = line[0..mutate_at_index - 1] + line[mutate_at_index..].sub(pattern.to_s, mutation[:substring])
           mutant_info = [
-            "==> @Line: #{line_num + 1}:#{mutate_at_index} type: #{mutation[:type]}",
+            "==> @Line: #{line_num}:#{mutate_at_index} type: #{mutation[:type]}",
             "Original Line: #{line.strip}",
             "Mutated Line : #{mutated_line.strip}"
           ]
@@ -44,11 +44,13 @@ def main
 end
 
 def create_mutant( filename, source_code, line_num, mutated_line, comment = [] )
-  source_code[line_num] = mutated_line
   content = []
   content = comment.map{|line| "// #{line}"}
   content += [ "" ]
-  content += source_code
+  content += source_code[0..line_num - 1]
+  content += [ mutated_line ]
+  content += source_code[line_num + 1..]
+
   writer = Writer.new(filename)
   writer.write(content)
   # console output
