@@ -62,8 +62,8 @@ def klee_test(idx)
     raise "no ktest files where found in #{k_base}" if k_tests.empty?
     k_tests.each do |test|
       filename = "#{k_base}/#{test}"
-      res, err = system_exec("cat #{filename}") # for testing
-      # res, err = system_exec("ktest-tool #{filename}")
+      # res, err = system_exec("cat #{filename}") # for testing
+      res, err = system_exec("ktest-tool #{filename}")
       raise err if !err.nil?
       res.each_line do |line|
         klee_res.push(line) if line.include?("object")
