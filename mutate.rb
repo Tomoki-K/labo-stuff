@@ -3,9 +3,9 @@ require "./mutation_patterns"
 require "./io_utils/reader"
 require "./io_utils/writer"
 
-INPUTFILE = "./test/sample.c"
-OUTPUTDIR = "./test/mutants"
-OUTPUTCSV = "result.csv"
+INPUTFILE = ARGV[0] || "./test/sample.c"
+OUTPUTDIR = ARGV[1] || "./test/mutants"
+OUTPUTCSV = ARGV[2] || "result.csv"
 
 def main
   reader = Reader.new(INPUTFILE)

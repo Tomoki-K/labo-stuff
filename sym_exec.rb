@@ -5,7 +5,6 @@ require "./io_utils/reader"
 require "./io_utils/writer"
 
 RESULTCSV = "result.csv"
-KOUTPATH = "./test" # TODO: change to "."
 
 def main
   reader = Reader.new(RESULTCSV)
@@ -57,7 +56,7 @@ end
 def klee_test(idx)
   begin
     klee_res = []
-    k_base = "#{KOUTPATH}/klee-out-#{idx}"
+    k_base = "./klee-out-#{idx}"
     k_tests = Dir.glob('*.ktest', base: k_base).sort
     raise "no ktest files where found in #{k_base}" if k_tests.empty?
     k_tests.each do |test|
@@ -85,8 +84,8 @@ end
 
 # logs and raises error if condition is false
 def checkpoint(description, success_condition)
-  raise "[LOG]\t#{description}:\t\e[31mfail\e[0m" unless success_condition
-  puts "[LOG]\t#{description}:\t\e[32msuccess\e[0m"
+  raise "[LOG]\t#{description}: \e[31mfail\e[0m" unless success_condition
+  puts "[LOG]\t#{description}: \e[32msuccess\e[0m"
 end
 
 main
