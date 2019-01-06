@@ -5,6 +5,7 @@ require "./io_utils/reader"
 require "./io_utils/writer"
 
 RESULTCSV = "result.csv"
+KOUTPATH = "./test" # TODO: change to "."
 
 def main
   reader = Reader.new(RESULTCSV)
@@ -18,12 +19,13 @@ def main
     bc_filename = mutant[:filename].split('/').last.gsub('.c', '.bc')
     begin
       # compile file to LLVM bitcode
-      res, err = system_exec("wc #{mutant[:filename]}") # for testing
-      # res, err = system_exec("clang -I ./klee_src/include -emit-llvm -c -g #{mutant[:filename]}")
+      res, err = system_exec("clang -I ./klee_src/include -emit-llvm -c -g #{mutant[:filename]}")
+      # res, err = system_exec("wc #{mutant[:filename]}") # for testing
       checkpoint('compile to LLVM', err.nil?)
 
-      res, err = system_exec("wc #{mutant[:filename]}") # for testing
-      # res, err = system_exec("klee #{bc_filename}")
+      # run KLEE on the bitcode file to generate ktest cases
+      res, err = system_exec("klee #{bc_filename}")
+      # res, err = system_exec("wc #{mutant[:filename]}") # for testing
       checkpoint('generate ktests', err.nil?)
       mutant[:ktest_path] = "klee-out-#{klee_index}"
       klee_index += 1
@@ -49,13 +51,14 @@ def main
   writer.write_csv(Result::HEADER, results)
   # console output
   puts "\n============="
+  puts "SUMMARY"
   puts "success: #{mutants.length - failure_count} failure: #{failure_count}"
 end
 
 def klee_test(idx)
   begin
     klee_res = []
-    k_base = "./test/klee-out-#{idx}"
+    k_base = "#{KOUTPATH}/klee-out-#{idx}"
     k_tests = Dir.glob('*.ktest', base: k_base).sort
     raise "no ktest files where found in #{k_base}" if k_tests.empty?
     k_tests.each do |test|
@@ -69,7 +72,7 @@ def klee_test(idx)
     end
     return Digest::SHA256.hexdigest(klee_res.join("\n"))
   rescue => exception
-    puts "ERROR: #{exception.message}"
+    puts "\e[31mERROR\e[0m\t#{exception.message}"
     return nil
   end
 end
@@ -83,8 +86,8 @@ end
 
 # logs and raises error if condition is false
 def checkpoint(description, success_condition)
-  raise "#{description}: fail" unless success_condition
-  puts "#{description}: success"
+  raise "[LOG]\t#{description}:\t\e[31mfail\e[0m" unless success_condition
+  puts "[LOG]\t#{description}:\t\e[32msuccess\e[0m"
 end
 
 main
