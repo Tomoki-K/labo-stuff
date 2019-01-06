@@ -11,7 +11,7 @@ def main
   reader = Reader.new(INPUTFILE)
   source_code = reader.read_lines
 
-  result = [Result::create_result_hash(0, INPUTFILE, "ORIGINAL", nil, nil)]
+  result = [Result::create_result_hash(0, INPUTFILE, "ORIGINAL")]
   mutant_count = 1
   source_code.each_with_index do |line, line_num|
     # do not mutate preprocessor or assert statements
@@ -36,7 +36,7 @@ def main
             "Mutated Line : #{mutated_line.strip}"
           ]
           filename= "#{OUTPUTDIR}/mutant_#{mutant_count}.c"
-          result.push(Result::create_result_hash(mutant_count, filename, mutation[:type], nil, nil))
+          result.push(Result::create_result_hash(mutant_count, filename, mutation[:type]))
           create_mutant(filename, source_code, line_num, mutated_line, mutant_info)
           mutant_count += 1
         end

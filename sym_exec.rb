@@ -19,21 +19,25 @@ def main
     begin
       # compile file to LLVM bitcode
       res, err = system_exec("wc #{mutant[:filename]}") # for testing
-      # res, err = system_exec("clang -I ./klee_src/include -emit-llvm -c -g #{mutant[:filename]}") && system_exec("klee #{bc_filename}")
-      raise err if !err.nil?
+      # res, err = system_exec("clang -I ./klee_src/include -emit-llvm -c -g #{mutant[:filename]}")
+      checkpoint('compile to LLVM', err.nil?)
+
+      res, err = system_exec("wc #{mutant[:filename]}") # for testing
+      # res, err = system_exec("klee #{bc_filename}")
+      checkpoint('generate ktests', err.nil?)
+      mutant[:ktest_path] = "klee-out-#{klee_index}"
       klee_index += 1
-      puts "compile to LLVM: success"
 
       # run klee test to generate hash
       hash = klee_test(klee_index)
-      raise "hash generation failed" if hash.nil?
-      puts "generate hash: success"
+      checkpoint('generate hash', !hash.nil?)
+      puts hash
 
       mutant[:hash] = hash
       mutant[:mutant_type] = 'TRIVIAL'
     rescue => exception
       mutant[:mutant_type] = 'STILLBORN'
-      puts "ERROR: #{exception.message}"
+      puts exception.message
       failure_count += 1
     ensure
       results.push(mutant)
@@ -70,10 +74,17 @@ def klee_test(idx)
   end
 end
 
+# executes external commands
 def system_exec(command)
   out, err, status = Open3.capture3(command)
   err = nil if status.exitstatus == 0
   return [out, err]
+end
+
+# logs and raises error if condition is false
+def checkpoint(description, success_condition)
+  raise "#{description}: fail" unless success_condition
+  puts "#{description}: success"
 end
 
 main
