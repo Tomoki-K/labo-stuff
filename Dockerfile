@@ -22,3 +22,5 @@ ENV CONFIGURE_OPTS --disable-install-doc
 RUN rbenv install ${ruby_ver}
 RUN rbenv global ${ruby_ver}
 RUN rbenv rehash
+
+ADD . .
