@@ -47,7 +47,7 @@ def main
   writer = Writer.new(OUTPUTCSV)
   writer.write_csv(Result::HEADER, result)
   # console output
-  puts "\n============="
+  puts "\n====== SUMMARY ======="
   puts "#{mutant_count} mutants generated"
 end
 

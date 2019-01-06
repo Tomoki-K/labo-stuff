@@ -50,8 +50,7 @@ def main
   writer = Writer.new(RESULTCSV)
   writer.write_csv(Result::HEADER, results)
   # console output
-  puts "\n============="
-  puts "SUMMARY"
+  puts "\n====== SUMMARY ======="
   puts "success: #{mutants.length - failure_count} failure: #{failure_count}"
 end
 
