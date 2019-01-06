@@ -1,15 +1,18 @@
+require "./result"
 require "./mutation_patterns"
 require "./io_utils/reader"
 require "./io_utils/writer"
 
 INPUTFILE = "./test/sample.c"
 OUTPUTDIR = "./test/mutants"
+OUTPUTCSV = "result.csv"
 
 def main
   reader = Reader.new(INPUTFILE)
   source_code = reader.read_lines
 
-  mutant_count = 0
+  result = [Result::create_result_hash(0, INPUTFILE, "ORIGINAL", nil, nil)]
+  mutant_count = 1
   source_code.each_with_index do |line, line_num|
     # do not mutate preprocessor or assert statements
     next if line.strip.start_with?("#") || line.strip.start_with?("assert")
@@ -32,13 +35,18 @@ def main
             "Original Line: #{line.strip}",
             "Mutated Line : #{mutated_line.strip}"
           ]
-          create_mutant("#{OUTPUTDIR}/mutant_#{mutant_count}.c",
-                        source_code, line_num, mutated_line, mutant_info)
+          filename= "#{OUTPUTDIR}/mutant_#{mutant_count}.c"
+          result.push(Result::create_result_hash(mutant_count, filename, mutation[:type], nil, nil))
+          create_mutant(filename, source_code, line_num, mutated_line, mutant_info)
           mutant_count += 1
         end
       end
     end
   end
+  # csv output
+  writer = Writer.new(OUTPUTCSV)
+  writer.write_csv(Result::HEADER, result)
+  # console output
   puts "\n============="
   puts "#{mutant_count} mutants generated"
 end
