@@ -19,12 +19,10 @@ def main
     begin
       # compile file to LLVM bitcode
       res, err = system_exec("clang -I ./klee_src/include -emit-llvm -c -g #{mutant[:filename]}")
-      # res, err = system_exec("wc #{mutant[:filename]}") # for testing
       checkpoint('compile to LLVM', err.nil?)
 
       # run KLEE on the bitcode file to generate ktest cases
       res, err = system_exec("klee #{bc_filename}")
-      # res, err = system_exec("wc #{mutant[:filename]}") # for testing
       checkpoint('generate ktests', err.nil?)
       mutant[:ktest_path] = "klee-out-#{klee_index}"
       klee_index += 1
@@ -61,7 +59,6 @@ def klee_test(idx)
     raise "no ktest files where found in #{k_base}" if k_tests.empty?
     k_tests.each do |test|
       filename = "#{k_base}/#{test}"
-      # res, err = system_exec("cat #{filename}") # for testing
       res, err = system_exec("ktest-tool #{filename}")
       raise err if !err.nil?
       res.each_line do |line|

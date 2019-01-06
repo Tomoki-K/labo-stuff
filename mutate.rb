@@ -48,7 +48,7 @@ def main
   writer.write_csv(Result::HEADER, result)
   # console output
   puts "\n====== SUMMARY ======="
-  puts "#{mutant_count} mutants generated"
+  puts "#{mutant_count - 1} mutants generated"
 end
 
 def create_mutant( filename, source_code, line_num, mutated_line, comment = [] )
