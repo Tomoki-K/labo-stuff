@@ -5,11 +5,23 @@ NULL_STRING = " "
 MUTATION_TYPES = {
   # ABS: Absolute value insertion
   "ABS": {
-    " = ": [ " = 0 * ", " = 0 ;//", " = NULL; //" ],
+    " = ": [ " = 0 * ", " = 0 ; //", " = NULL; //" ],
     " + 1": [ "+ 0", "+ 2" ],
     " - 1": [ "+ 0", "- 2" ],
     " true ": [ " false " ],
     " false ": [ " true " ],
+    " a ": [ " b ", " c ", " 0 ", " 1 ", " true ", " false " ],
+    " a; ": [ " b; ", " c; ", " 0; ", " 1; ", " true; ", " false; " ],
+    " b ": [ " a ", " c ", " 0 ", " 1 ", " true ", " false " ],
+    " b; ": [ " a; ", " c; ", " 0; ", " 1; ", " true; ", " false; " ],
+    " c ": [ " a ", " b ", " 0 ", " 1 ", " true ", " false " ],
+    " c; ": [ " a; ", " b; ", " 0; ", " 1; ", " true; ", " false; " ],
+    " x ": [ " y ", " z ", " 0 ", " 1 ", " true ", " false " ],
+    " x; ": [ " y; ", " z; ", " 0; ", " 1; ", " true; ", " false; " ],
+    " y ": [ " x ", " z ", " 0 ", " 1 ", " true ", " false " ],
+    " y; ": [ " x; ", " z; ", " 0; ", " 1; ", " true; ", " false; " ],
+    " z ": [ " x ", " y ", " 0 ", " 1 ", " true ", " false " ],
+    " z; ": [ " x; ", " y; ", " 0; ", " 1; ", " true; ", " false; " ],
   },
   # AOR: Arithmic operator replacement
   "AOR": {
