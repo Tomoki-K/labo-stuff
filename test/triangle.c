@@ -1,11 +1,13 @@
 #include <klee/klee.h>
 
 int triangle(int a, int b, int c) {
-  int type = 0; // Scalene
+  if ( a <= 0 || b <= 0 || c <= 0 )
+    return 0; // invalid
+  int type = 1; // Scalene
   if (a == b && b == c) {
-    type = 1; // Equilateral
+    type = 2; // Equilateral
   } else if ( a == b || b == c || c == a ) {
-    type = 2; // Isosceles
+    type = 3; // Isosceles
   }
   return type;
 }
