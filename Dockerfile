@@ -2,6 +2,7 @@ FROM klee/klee
 USER root
 
 ENV ruby_ver="2.6.0"
+ENV ROOT="/home/klee"
 
 RUN sudo apt-get update \
  && sudo apt-get install -y vim make libssl-dev libreadline-dev zlib1g-dev

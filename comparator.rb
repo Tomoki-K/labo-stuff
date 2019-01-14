@@ -2,7 +2,7 @@ require './result'
 require "./io_utils/reader"
 require "./io_utils/writer"
 
-RESULTCSV = "result.csv"
+RESULTCSV = ENV['ROOT'] + "/results/summary.csv"
 
 reader = Reader.new(RESULTCSV)
 mutants = reader.read_csv
